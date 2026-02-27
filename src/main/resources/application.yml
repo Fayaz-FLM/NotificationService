@@ -1,0 +1,7 @@
+server:
+  port: 8086
+
+sendgrid:
+  api-key:
+  from-email: medsync.notifications@gmail.com
+  from-name: MedSync Notifications
