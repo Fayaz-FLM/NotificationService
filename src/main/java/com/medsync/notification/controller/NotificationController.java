@@ -19,7 +19,9 @@ public class NotificationController {
     @PostMapping("/email")
     public ResponseEntity<String> sendEmail(@Valid @RequestBody EmailRequest request) {
 
+        System.out.println("NotificationController: Received email request for: " + request.getTo());
         notificationService.sendEmail(request);
+        System.out.println("NotificationController: Email processing initiated");
 
         return ResponseEntity.ok("Email sent successfully");
     }
