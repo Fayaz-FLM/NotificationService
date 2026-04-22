@@ -2,6 +2,6 @@ server:
   port: 9005
 
 sendgrid:
-  api-key: YOUR_API_KEY
+  api-key: 
   from-email: medsync.notifications@gmail.com
   from-name: MedSync Notifications
