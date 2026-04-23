@@ -15,6 +15,9 @@ public class EmailRequest {
     @NotBlank
     private String body;
     
+    public EmailRequest() {
+    }
+    
     public EmailRequest(@Email @NotBlank String to, @NotBlank String subject, @NotBlank String body) {
 		super();
 		this.to = to;

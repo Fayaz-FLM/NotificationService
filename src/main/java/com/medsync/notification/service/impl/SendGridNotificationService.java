@@ -23,8 +23,15 @@ public class SendGridNotificationService implements NotificationService {
     }
 
     @Override
-    @Async
     public void sendEmail(EmailRequest requestDto) {
+
+        System.out.println("=== SendGridNotificationService: Starting email send ===");
+        System.out.println("To: " + requestDto.getTo());
+        System.out.println("Subject: " + requestDto.getSubject());
+        System.out.println("SendGrid API Key configured: " + (properties.getApiKey() != null && !properties.getApiKey().isEmpty()));
+        System.out.println("SendGrid API Key (first 10 chars): " + (properties.getApiKey() != null ? properties.getApiKey().substring(0, Math.min(10, properties.getApiKey().length())) : "null"));
+        System.out.println("From Email: " + properties.getFromEmail());
+        System.out.println("From Name: " + properties.getFromName());
 
         Email from = new Email(
                 properties.getFromEmail(),
@@ -48,13 +55,29 @@ public class SendGridNotificationService implements NotificationService {
 
             Response response = sendGrid.api(request);
 
+            System.out.println("=== SendGrid Response ===");
+            System.out.println("Status Code: " + response.getStatusCode());
+            System.out.println("Response Body: " + response.getBody());
+            System.out.println("Response Headers: " + response.getHeaders());
+
             if (response.getStatusCode() != 202) {
-                throw new RuntimeException("Failed to send email. Status Code: "
-                        + response.getStatusCode());
+                String errorMsg = "Failed to send email. Status Code: " + response.getStatusCode() + ", Body: " + response.getBody();
+                System.err.println(errorMsg);
+                throw new RuntimeException(errorMsg);
             }
+            
+            System.out.println("=== Email sent successfully via SendGrid to: " + requestDto.getTo() + " ===");
 
         } catch (IOException e) {
-            throw new RuntimeException("SendGrid Error: " + e.getMessage());
+            System.err.println("=== SendGrid IOException ===");
+            System.err.println("Error Message: " + e.getMessage());
+            e.printStackTrace();
+            throw new RuntimeException("SendGrid Error: " + e.getMessage(), e);
+        } catch (Exception e) {
+            System.err.println("=== Unexpected Exception in SendGrid ===");
+            System.err.println("Error Message: " + e.getMessage());
+            e.printStackTrace();
+            throw new RuntimeException("Unexpected error sending email: " + e.getMessage(), e);
         }
     }
 }
